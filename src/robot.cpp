@@ -100,3 +100,4 @@ Eigen::Matrix<float, 2, 3> Robot::inv_scan(Eigen::Vector2f y)
   return P_y;
 }
 
+
