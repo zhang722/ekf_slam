@@ -7,7 +7,7 @@
 
 
 
-Eigen::Vector3f Robot::move(Eigen::Vector2f u, Eigen::Vector2f n)
+void Robot::move(Eigen::Vector2f u, Eigen::Vector2f n)
 {
   float a = pose(2);
   float dx = u(0) + n(0);
@@ -17,7 +17,7 @@ Eigen::Vector3f Robot::move(Eigen::Vector2f u, Eigen::Vector2f n)
   if (ao > M_PI) {
     ao = ao - 2 * M_PI;
   }
-  if (ao < M_PI) {
+  if (ao < -M_PI) {
     ao = ao + 2 * M_PI;
   }
 

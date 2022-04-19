@@ -7,7 +7,7 @@ public:
   ~Robot() {};
 
   //robot
-  Eigen::Vector3f move(Eigen::Vector2f u, Eigen::Vector2f n);
+  void move(Eigen::Vector2f u, Eigen::Vector2f n);
   Eigen::Matrix<float, 3, 6> move(Eigen::Vector3f x, Eigen::Vector2f u, Eigen::Vector2f n);
 
   Eigen::Vector3f get_pose();
