@@ -7,7 +7,10 @@ public:
   ~Robot() {};
 
   //robot
-  Eigen::Matrix<float, 3, 5> move(Eigen::Vector2f u, Eigen::Vector2f n);
+  Eigen::Vector3f move(Eigen::Vector2f u, Eigen::Vector2f n);
+  Eigen::Matrix<float, 3, 6> move(Eigen::Vector3f x, Eigen::Vector2f u, Eigen::Vector2f n);
+
+  Eigen::Vector3f get_pose();
   void print();
   Eigen::Matrix<float, 2, 6> observe(Eigen::Vector3f r, Eigen::Vector2f p);
   Eigen::Matrix<float, 2, 6> inv_observe(Eigen::Vector3f r, Eigen::Vector2f y);

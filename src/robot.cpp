@@ -5,7 +5,9 @@
 #include "robot.h"
 #include "frame.h"
 
-Eigen::Matrix<float, 3, 5> Robot::move(Eigen::Vector2f u, Eigen::Vector2f n)
+
+
+Eigen::Vector3f Robot::move(Eigen::Vector2f u, Eigen::Vector2f n)
 {
   float a = pose(2);
   float dx = u(0) + n(0);
@@ -22,25 +24,59 @@ Eigen::Matrix<float, 3, 5> Robot::move(Eigen::Vector2f u, Eigen::Vector2f n)
   Eigen::Vector2f dp(dx, 0);
   Eigen::Matrix<float, 2, 6> to = from_frame(pose, dp);
 
-  //updated pose in global frame
+  pose.head(2) = to.block<2, 1>(0, 0);
+  pose(2) = ao;
+}
+
+
+
+
+
+Eigen::Matrix<float, 3, 6> Robot::move(Eigen::Vector3f x, Eigen::Vector2f u, Eigen::Vector2f n)
+{
+  float a = x(2);
+  float dx = u(0) + n(0);
+  float da = u(1) + n(1);
+  float ao = a + da;
+
+  if (ao > M_PI) {
+    ao = ao - 2 * M_PI;
+  }
+  if (ao < M_PI) {
+    ao = ao + 2 * M_PI;
+  }
+
+  Eigen::Vector2f dp(dx, 0);
+  Eigen::Matrix<float, 2, 6> to = from_frame(x, dp);
+
+  //updated x in global frame
   Eigen::Vector3f ro = Eigen::Vector3f::Zero();
   ro.head(2) = to.block<2, 1>(0, 0);
   ro(2) = ao;
-  pose = ro;
 
-  Eigen::Matrix<float, 3, 5> jacobian = Eigen::Matrix<float, 3, 5>::Zero();
-  jacobian.block<2, 3>(0, 0) = to.block<2, 3>(0, 1);
-  jacobian(2, 2) = 1;
-  jacobian.block<2, 1>(0, 3) = to.block<2, 1>(0, 4);
-  jacobian(2, 4) = 1;
+  Eigen::Matrix<float, 3, 6> jacobian = Eigen::Matrix<float, 3, 6>::Zero();
+  jacobian.block<3, 1>(0, 0) = ro;
+  jacobian.block<2, 3>(0, 1) = to.block<2, 3>(0, 1);
+  jacobian(2, 3) = 1;
+  jacobian.block<2, 1>(0, 4) = to.block<2, 1>(0, 4);
+  jacobian(2, 5) = 1;
 
   return jacobian;
+}
+
+
+
+Eigen::Vector3f Robot::get_pose()
+{
+  return pose;
 }
 
 void Robot::print()
 {
   std::cout << pose << std::endl;
 }
+
+
 
 
 Eigen::Matrix<float, 2, 6> Robot::observe(Eigen::Vector3f r, Eigen::Vector2f p)
@@ -55,6 +91,7 @@ Eigen::Matrix<float, 2, 6> Robot::observe(Eigen::Vector3f r, Eigen::Vector2f p)
 
   return y_out;
 }
+
 
 
 
