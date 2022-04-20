@@ -42,7 +42,7 @@ Eigen::Matrix<float, 3, 6> Robot::move(Eigen::Vector3f x, Eigen::Vector2f u, Eig
   if (ao > M_PI) {
     ao = ao - 2 * M_PI;
   }
-  if (ao < M_PI) {
+  if (ao < -M_PI) {
     ao = ao + 2 * M_PI;
   }
 
